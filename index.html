@@ -1,4 +1,4 @@
-                       <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -382,11 +382,11 @@
         </div>
 
         <div class="tabs">
-            <button class="tab-btn active" onclick="switchTab('korzhi')">Коржи</button>
-            <button class="tab-btn" onclick="switchTab('propitki')">Пропитки</button>
-            <button class="tab-btn" onclick="switchTab('kremy')">Кремы</button>
-            <button class="tab-btn" onclick="switchTab('selector')">Подбор</button>
-            <button class="tab-btn" onclick="switchTab('gallery')">Галерея</button>
+            <button class="tab-btn active" onclick="switchTab(event, 'korzhi')">Коржи</button>
+            <button class="tab-btn" onclick="switchTab(event, 'propitki')">Пропитки</button>
+            <button class="tab-btn" onclick="switchTab(event, 'kremy')">Кремы</button>
+            <button class="tab-btn" onclick="switchTab(event, 'selector')">Подбор</button>
+            <button class="tab-btn" onclick="switchTab(event, 'gallery')">Галерея</button>
         </div>
 
         <div class="content">
@@ -420,19 +420,19 @@
                         </div>
                         <div class="price-row">
                             <span>Сахар (кг):</span>
-                            <input type="number" id="priceSugar" value="40" onchange="updateSelector()">
+                            <input type="number" id="priceSugar" value="60" onchange="updateSelector()">
                         </div>
                         <div class="price-row">
                             <span>Масло (кг):</span>
-                            <input type="number" id="priceButter" value="500" onchange="updateSelector()">
+                            <input type="number" id="priceButter" value="900" onchange="updateSelector()">
                         </div>
                         <div class="price-row">
                             <span>Сыр Philad. (250g):</span>
-                            <input type="number" id="priceCheese" value="110" onchange="updateSelector()">
+                            <input type="number" id="priceCheese" value="440" onchange="updateSelector()">
                         </div>
                         <div class="price-row">
                             <span>Сливки (500мл):</span>
-                            <input type="number" id="priceCream" value="180" onchange="updateSelector()">
+                            <input type="number" id="priceCream" value="400" onchange="updateSelector()">
                         </div>
                         <div class="price-row">
                             <span>Какао (100g):</span>
@@ -458,9 +458,9 @@
                         <option value="Ягодный">Ягодный</option>
                     </select>
 
-                    <h3>Выбери крем:</h3>
+                    <h3>Крем (подбирается автоматически):</h3>
                     <select id="cremSelect" onchange="updateSelector()">
-                        <option value="">-- Выбери --</option>
+                        <option value="">-- Выбери корж и пропитку --</option>
                         <option value="Крем из сливок">Крем из сливок</option>
                         <option value="Крем-чиз на масле">Крем-чиз на масле</option>
                         <option value="Крем-чиз на сливках">Крем-чиз на сливках</option>
@@ -482,7 +482,7 @@
         </div>
 
         <div class="footer">
-            🎂 Конструктор Торта PRO | v2.0 | Быстрый расчет себестоимости
+            🎂 Конструктор Торта PRO | v2.1 | Быстрый расчет себестоимости
         </div>
     </div>
 
@@ -564,7 +564,7 @@
                 name: "Крем масляный",
                 ingredients: "250г сливочного масла, 250мл молока/сливок 20%, 100г сахарной пудры, щепотка соли",
                 steps: "1. Взбить масло 3 минуты до бледно-жёлтого оттенка\n2. Добавить пудру порциями, взбивать 2 минуты\n3. Очень медленно добавлять молоко (30 сек на 50мл)",
-                notes: "Крем старой школы, густой, держит форму. Хранится 1 неделю"
+                notes: "Крем старой школы, густой, держит форму. Хранится 1 неделя"
             },
             {
                 name: "Крем шоколадный",
@@ -588,18 +588,18 @@
         ];
 
         const gallery = [
-            { name: "Классический Бисквит", emoji: "🎂", combo: ["Классический бисквит", "Универсальный сахарный", "Крем из сливок"], price: "1500-2000₽" },
-            { name: "Шоколад-Кофе", emoji: "☕", combo: ["Шоколадный бисквит", "Кофейный", "Крем шоколадный"], price: "1800-2400₽" },
-            { name: "Ягодная Свежесть", emoji: "🫐", combo: ["Классический бисквит", "Ягодный", "Крем из сливок"], price: "1600-2200₽" },
-            { name: "Сливочный Чиз", emoji: "🧁", combo: ["Бисквит на кефире", "Молочный", "Крем-чиз на масле"], price: "1900-2500₽" },
-            { name: "Ореховый Деликатес", emoji: "🥜", combo: ["Алладин", "Молочный", "Крем масляный"], price: "2000-2800₽" },
-            { name: "Тирамису Элегант", emoji: "☕🎂", combo: ["Шоколадный бисквит", "Кофейный", "Крем масляный"], price: "2100-2900₽" },
-            { name: "Кефирный+Ягода", emoji: "🍓", combo: ["Бисквит на кефире", "Ягодный", "Крем-чиз на сливках"], price: "1700-2300₽" },
-            { name: "Премиум Чоколад", emoji: "🍫", combo: ["Шоколадный бисквит", "Молочный", "Крем шоколадный"], price: "2200-3000₽" },
-            { name: "Лёгкий и Воздушный", emoji: "☁️", combo: ["Классический бисквит", "Молочный", "Крем-чиз на сливках"], price: "1400-1900₽" },
-            { name: "Масляный Дворецкий", emoji: "👑", combo: ["Алладин", "Кофейный", "Крем масляный"], price: "2300-3200₽" },
-            { name: "Сахарный Сироп Классик", emoji: "✨", combo: ["Классический бисквит", "Универсальный сахарный", "Крем-чиз на масле"], price: "1600-2200₽" },
-            { name: "Кофейный Чиз-Лайт", emoji: "💫", combo: ["Бисквит на кефире", "Кофейный", "Крем-чиз на сливках"], price: "1800-2400₽" }
+            { name: "Классический Бисквит", emoji: "🎂", combo: ["Классический бисквит", "Универсальный сахарный", "Крем из сливок"], price: "2500-3500₽" },
+            { name: "Шоколад-Кофе", emoji: "☕", combo: ["Шоколадный бисквит", "Кофейный", "Крем шоколадный"], price: "3000-4200₽" },
+            { name: "Ягодная Свежесть", emoji: "🫐", combo: ["Классический бисквит", "Ягодный", "Крем из сливок"], price: "2600-3700₽" },
+            { name: "Сливочный Чиз", emoji: "🧁", combo: ["Бисквит на кефире", "Молочный", "Крем-чиз на масле"], price: "3200-4500₽" },
+            { name: "Ореховый Деликатес", emoji: "🥜", combo: ["Алладин", "Молочный", "Крем масляный"], price: "3400-4800₽" },
+            { name: "Тирамису Элегант", emoji: "☕🎂", combo: ["Шоколадный бисквит", "Кофейный", "Крем масляный"], price: "3500-5000₽" },
+            { name: "Кефирный+Ягода", emoji: "🍓", combo: ["Бисквит на кефире", "Ягодный", "Крем-чиз на сливках"], price: "2800-4000₽" },
+            { name: "Премиум Чоколад", emoji: "🍫", combo: ["Шоколадный бисквит", "Молочный", "Крем шоколадный"], price: "3600-5200₽" },
+            { name: "Лёгкий и Воздушный", emoji: "☁️", combo: ["Классический бисквит", "Молочный", "Крем-чиз на сливках"], price: "2400-3400₽" },
+            { name: "Масляный Дворецкий", emoji: "👑", combo: ["Алладин", "Кофейный", "Крем масляный"], price: "3700-5300₽" },
+            { name: "Сахарный Сироп Классик", emoji: "✨", combo: ["Классический бисквит", "Универсальный сахарный", "Крем-чиз на масле"], price: "2700-3900₽" },
+            { name: "Кофейный Чиз-Лайт", emoji: "💫", combo: ["Бисквит на кефире", "Кофейный", "Крем-чиз на сливках"], price: "3100-4400₽" }
         ];
 
         function renderRecipes(data, containerId) {
@@ -642,7 +642,7 @@
             document.getElementById('korjSelect').value = item.combo[0];
             document.getElementById('propSelect').value = item.combo[1];
             document.getElementById('cremSelect').value = item.combo[2];
-            switchTab('selector');
+            switchTab(null, 'selector');
             updateSelector();
         }
 
@@ -663,29 +663,29 @@
         function calculateCost(korz, prop, crem) {
             const priceEgg = parseFloat(document.getElementById('priceEgg').value) || 10;
             const priceFlour = parseFloat(document.getElementById('priceFlour').value) || 60;
-            const priceSugar = parseFloat(document.getElementById('priceSugar').value) || 40;
-            const priceButter = parseFloat(document.getElementById('priceButter').value) || 500;
-            const priceCheese = parseFloat(document.getElementById('priceCheese').value) || 110;
-            const priceCream = parseFloat(document.getElementById('priceCream').value) || 180;
+            const priceSugar = parseFloat(document.getElementById('priceSugar').value) || 60;
+            const priceButter = parseFloat(document.getElementById('priceButter').value) || 900;
+            const priceCheese = parseFloat(document.getElementById('priceCheese').value) || 440;
+            const priceCream = parseFloat(document.getElementById('priceCream').value) || 400;
             const priceCocoa = parseFloat(document.getElementById('priceCocoa').value) || 80;
 
             let costKorz = 0, costProp = 0, costCrem = 0;
 
-            if (korz === "Классический бисквит") costKorz = 5 * priceEgg + 1 * priceFlour / 1000 * 250 + 1 * priceSugar / 1000 * 250;
-            else if (korz === "Бисквит на кефире") costKorz = 3 * priceEgg + 0.35 * priceFlour + 0.3 * priceSugar + 50;
-            else if (korz === "Шоколадный бисквит") costKorz = 2 * priceEgg + 0.05 * priceFlour + 0.113 * priceSugar + 90 * priceButter / 1000 + 50 * priceCocoa / 1000;
-            else if (korz === "Алладин") costKorz = 0.1 * priceButter + 400 * 8 / 1000 + 0.34 * priceSugar + 0.5 * priceFlour + 50;
+            if (korz === "Классический бисквит") costKorz = 5 * priceEgg + 250 * priceFlour / 1000 + 250 * priceSugar / 1000;
+            else if (korz === "Бисквит на кефире") costKorz = 3 * priceEgg + 350 * priceFlour / 1000 + 300 * priceSugar / 1000 + 150;
+            else if (korz === "Шоколадный бисквит") costKorz = 2 * priceEgg + 113 * priceSugar / 1000 + 90 * priceButter / 1000 + 100 + 50 * priceCocoa / 1000;
+            else if (korz === "Алладин") costKorz = 100 * priceButter / 1000 + 400 * 8 / 1000 + 340 * priceSugar / 1000 + 500 * priceFlour / 1000 + 150;
 
-            if (prop === "Универсальный сахарный") costProp = 0.1 * priceSugar;
-            else if (prop === "Молочный") costProp = 0.03 * priceSugar + 30;
-            else if (prop === "Кофейный") costProp = 0.05 * priceSugar + 20;
-            else if (prop === "Ягодный") costProp = 0.03 * priceSugar + 40;
+            if (prop === "Универсальный сахарный") costProp = 100 * priceSugar / 1000;
+            else if (prop === "Молочный") costProp = 30 * priceSugar / 1000 + 50;
+            else if (prop === "Кофейный") costProp = 50 * priceSugar / 1000 + 40;
+            else if (prop === "Ягодный") costProp = 30 * priceSugar / 1000 + 80;
 
             if (crem === "Крем из сливок") costCrem = priceCream;
-            else if (crem === "Крем-чиз на масле") costCrem = 250 * priceButter / 1000 + 110 + 0.15 * priceSugar;
-            else if (crem === "Крем-чиз на сливках") costCrem = priceCream * 0.6 + 55 + 0.06 * priceSugar;
-            else if (crem === "Крем масляный") costCrem = 250 * priceButter / 1000 + priceCream * 0.5 + 0.1 * priceSugar;
-            else if (crem === "Крем шоколадный") costCrem = 150 * priceButter / 1000 + 100 + priceCream * 0.2 + 20 * priceCocoa / 1000;
+            else if (crem === "Крем-чиз на масле") costCrem = 250 * priceButter / 1000 + priceCheese + 150 * priceSugar / 1000;
+            else if (crem === "Крем-чиз на сливках") costCrem = priceCream * 0.6 + priceCheese * 0.5 + 60 * priceSugar / 1000;
+            else if (crem === "Крем масляный") costCrem = 250 * priceButter / 1000 + priceCream * 0.5 + 100 * priceSugar / 1000;
+            else if (crem === "Крем шоколадный") costCrem = 150 * priceButter / 1000 + 200 + priceCream * 0.25 + 20 * priceCocoa / 1000;
 
             const totalCost = Math.round(costKorz + costProp + costCrem);
             const retailPrice = Math.round(totalCost * 2.5);
@@ -759,7 +759,7 @@
         }
 
         function shareWhatsApp(korz, prop, crem, price) {
-            const text = `Проверь этот торт! 🎂\n\nКорж: ${korz}\nПропитка: ${prop}\nКрем: ${crem}\n\nЦена: ${price}₽\n\nКонструктор торта: https://konstruktor-torta.ru`;
+            const text = `Проверь этот торт! 🎂\n\nКорж: ${korz}\nПропитка: ${prop}\nКрем: ${crem}\n\nЦена: ${price}₽`;
             window.open(`https://wa.me/?text=${encodeURIComponent(text)}`);
         }
 
@@ -782,16 +782,27 @@
         function updateSelector() {
             const korj = document.getElementById('korjSelect').value;
             const prop = document.getElementById('propSelect').value;
-            const crem = document.getElementById('cremSelect').value;
+            let crem = document.getElementById('cremSelect').value;
             const result = document.getElementById('selectorResult');
 
-            if (!korj || !prop || !crem) {
+            if (!korj || !prop) {
+                result.innerHTML = '';
+                return;
+            }
+
+            // Автоматический подбор кремов если они не выбраны
+            const compatibleCreams = getCompatibleCreams(korj, prop);
+            if (!crem && compatibleCreams && compatibleCreams.length > 0) {
+                crem = compatibleCreams[0];
+                document.getElementById('cremSelect').value = crem;
+            }
+
+            if (!crem) {
                 result.innerHTML = '';
                 return;
             }
 
             const compatibility = checkCompatibility(korj, prop, crem);
-            const compatibleCreams = getCompatibleCreams(korj, prop);
             
             let html = `
                 <div class="result">
@@ -826,13 +837,16 @@
             result.innerHTML = html;
         }
 
-        function switchTab(tabName) {
+        function switchTab(event, tabName) {
             document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             document.getElementById(tabName).classList.add('active');
-            event.target.classList.add('active');
+            if (event) {
+                event.target.classList.add('active');
+            }
         }
 
+        // Инициализация
         renderRecipes(korzhi, 'korhiList');
         renderRecipes(propitki, 'propitkaList');
         renderRecipes(kremy, 'kremyList');
