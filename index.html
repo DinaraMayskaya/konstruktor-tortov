@@ -1,0 +1,842 @@
+                       <!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Конструктор Торта PRO</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #f5f5f5;
+            color: #333;
+        }
+
+        .container {
+            max-width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #d4a574 0%, #c89968 100%);
+            color: white;
+            padding: 16px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            flex-shrink: 0;
+        }
+
+        .header h1 {
+            font-size: 22px;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .tabs {
+            display: flex;
+            background: white;
+            border-bottom: 2px solid #e0e0e0;
+            flex-shrink: 0;
+            overflow-x: auto;
+        }
+
+        .tab-btn {
+            flex: 1;
+            min-width: 70px;
+            padding: 12px 6px;
+            background: white;
+            border: none;
+            border-bottom: 3px solid transparent;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            color: #666;
+            transition: all 0.3s;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        .tab-btn.active {
+            color: #d4a574;
+            border-bottom-color: #d4a574;
+            background: #fafafa;
+        }
+
+        .content {
+            flex: 1;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            padding: 12px;
+        }
+
+        .tab-panel {
+            display: none;
+        }
+
+        .tab-panel.active {
+            display: block;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .recipe-card {
+            background: white;
+            border-radius: 10px;
+            padding: 14px;
+            margin-bottom: 12px;
+            border-left: 4px solid #d4a574;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+        }
+
+        .recipe-card h3 {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .recipe-number {
+            background: #d4a574;
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .recipe-field {
+            margin-bottom: 8px;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .recipe-label {
+            font-weight: 600;
+            color: #666;
+            display: inline-block;
+            width: 100px;
+        }
+
+        .recipe-value {
+            color: #333;
+            display: inline;
+        }
+
+        .notes {
+            background: #fff9f0;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            color: #c89968;
+            font-style: italic;
+            margin-top: 10px;
+            border-left: 3px solid #d4a574;
+        }
+
+        .step-list {
+            background: #f9f9f9;
+            padding: 10px;
+            border-radius: 6px;
+            margin-top: 8px;
+            font-size: 12px;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .step-list ol {
+            margin: 0;
+            padding-left: 20px;
+        }
+
+        .step-list li {
+            margin-bottom: 4px;
+        }
+
+        .selector {
+            background: white;
+            border-radius: 10px;
+            padding: 14px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+        }
+
+        .selector h3 {
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        select, input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 13px;
+            font-family: inherit;
+            background: white;
+            color: #333;
+            cursor: pointer;
+            margin-bottom: 12px;
+        }
+
+        select:focus, input[type="number"]:focus {
+            outline: none;
+            border-color: #d4a574;
+            box-shadow: 0 0 4px rgba(212, 165, 116, 0.3);
+        }
+
+        .result {
+            background: #f0f9f8;
+            border-left: 3px solid #4caf50;
+            padding: 12px;
+            border-radius: 6px;
+            margin-top: 8px;
+        }
+
+        .result-title {
+            font-weight: 600;
+            font-size: 13px;
+            color: #2e7d32;
+            margin-bottom: 8px;
+        }
+
+        .result-item {
+            font-size: 13px;
+            color: #333;
+            margin-bottom: 6px;
+        }
+
+        .cost-block {
+            background: #fff3e0;
+            padding: 12px;
+            border-radius: 6px;
+            margin-top: 12px;
+            border-left: 3px solid #ff9800;
+        }
+
+        .cost-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+
+        .cost-row.total {
+            font-weight: 700;
+            color: #d4a574;
+            border-top: 2px solid #d4a574;
+            padding-top: 8px;
+        }
+
+        .button-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .btn {
+            padding: 10px;
+            border: none;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: #d4a574;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #c89968;
+        }
+
+        .btn-secondary {
+            background: #e0e0e0;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #d0d0d0;
+        }
+
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .gallery-item {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .gallery-item:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+        }
+
+        .gallery-image {
+            width: 100%;
+            height: 140px;
+            background: linear-gradient(135deg, #d4a574 0%, #c89968 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 48px;
+        }
+
+        .gallery-info {
+            padding: 10px;
+        }
+
+        .gallery-name {
+            font-weight: 600;
+            font-size: 12px;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .gallery-price {
+            font-size: 12px;
+            color: #d4a574;
+            font-weight: 700;
+        }
+
+        .footer {
+            padding: 12px;
+            text-align: center;
+            font-size: 11px;
+            color: #999;
+            border-top: 1px solid #e0e0e0;
+            background: white;
+            flex-shrink: 0;
+        }
+
+        .prices-edit {
+            background: #f9f9f9;
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 12px;
+            font-size: 12px;
+        }
+
+        .price-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+
+        .price-row input {
+            width: 60px;
+            padding: 4px;
+            font-size: 11px;
+        }
+
+        .success-message {
+            background: #e8f5e9;
+            color: #2e7d32;
+            padding: 10px;
+            border-radius: 6px;
+            margin-top: 8px;
+            font-size: 12px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎂 Конструктор Торта PRO</h1>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('korzhi')">Коржи</button>
+            <button class="tab-btn" onclick="switchTab('propitki')">Пропитки</button>
+            <button class="tab-btn" onclick="switchTab('kremy')">Кремы</button>
+            <button class="tab-btn" onclick="switchTab('selector')">Подбор</button>
+            <button class="tab-btn" onclick="switchTab('gallery')">Галерея</button>
+        </div>
+
+        <div class="content">
+            <!-- TAB 1: КОРЖИ -->
+            <div id="korzhi" class="tab-panel active">
+                <div id="korhiList"></div>
+            </div>
+
+            <!-- TAB 2: ПРОПИТКИ -->
+            <div id="propitki" class="tab-panel">
+                <div id="propitkaList"></div>
+            </div>
+
+            <!-- TAB 3: КРЕМЫ -->
+            <div id="kremy" class="tab-panel">
+                <div id="kremyList"></div>
+            </div>
+
+            <!-- TAB 4: ПОДБОР -->
+            <div id="selector" class="tab-panel">
+                <div class="selector">
+                    <h3>⚙️ Цены ингредиентов (Казань, ₽)</h3>
+                    <div class="prices-edit">
+                        <div class="price-row">
+                            <span>Яйцо (шт):</span>
+                            <input type="number" id="priceEgg" value="10" onchange="updateSelector()">
+                        </div>
+                        <div class="price-row">
+                            <span>Мука (кг):</span>
+                            <input type="number" id="priceFlour" value="60" onchange="updateSelector()">
+                        </div>
+                        <div class="price-row">
+                            <span>Сахар (кг):</span>
+                            <input type="number" id="priceSugar" value="40" onchange="updateSelector()">
+                        </div>
+                        <div class="price-row">
+                            <span>Масло (кг):</span>
+                            <input type="number" id="priceButter" value="500" onchange="updateSelector()">
+                        </div>
+                        <div class="price-row">
+                            <span>Сыр Philad. (250g):</span>
+                            <input type="number" id="priceCheese" value="110" onchange="updateSelector()">
+                        </div>
+                        <div class="price-row">
+                            <span>Сливки (500мл):</span>
+                            <input type="number" id="priceCream" value="180" onchange="updateSelector()">
+                        </div>
+                        <div class="price-row">
+                            <span>Какао (100g):</span>
+                            <input type="number" id="priceCocoa" value="80" onchange="updateSelector()">
+                        </div>
+                    </div>
+
+                    <h3>Выбери коржи:</h3>
+                    <select id="korjSelect" onchange="updateSelector()">
+                        <option value="">-- Выбери --</option>
+                        <option value="Классический бисквит">Классический бисквит</option>
+                        <option value="Бисквит на кефире">Бисквит на кефире</option>
+                        <option value="Шоколадный бисквит">Шоколадный бисквит</option>
+                        <option value="Алладин">Алладин (ореховый)</option>
+                    </select>
+
+                    <h3>Выбери пропитку:</h3>
+                    <select id="propSelect" onchange="updateSelector()">
+                        <option value="">-- Выбери --</option>
+                        <option value="Универсальный сахарный">Универсальный сахарный</option>
+                        <option value="Молочный">Молочный</option>
+                        <option value="Кофейный">Кофейный</option>
+                        <option value="Ягодный">Ягодный</option>
+                    </select>
+
+                    <h3>Выбери крем:</h3>
+                    <select id="cremSelect" onchange="updateSelector()">
+                        <option value="">-- Выбери --</option>
+                        <option value="Крем из сливок">Крем из сливок</option>
+                        <option value="Крем-чиз на масле">Крем-чиз на масле</option>
+                        <option value="Крем-чиз на сливках">Крем-чиз на сливках</option>
+                        <option value="Крем масляный">Крем масляный</option>
+                        <option value="Крем шоколадный">Крем шоколадный</option>
+                    </select>
+
+                    <div id="selectorResult"></div>
+                </div>
+            </div>
+
+            <!-- TAB 5: ГАЛЕРЕЯ -->
+            <div id="gallery" class="tab-panel">
+                <div class="selector">
+                    <h3>💡 Нажми на торт, чтобы скопировать рецепт</h3>
+                </div>
+                <div class="gallery" id="galleryContainer"></div>
+            </div>
+        </div>
+
+        <div class="footer">
+            🎂 Конструктор Торта PRO | v2.0 | Быстрый расчет себестоимости
+        </div>
+    </div>
+
+    <script>
+        const korzhi = [
+            {
+                name: "Классический бисквит",
+                ingredients: "5 яиц, 1 стакан сахара, 1 стакан муки",
+                steps: "1. Взбить яйца с сахаром до увеличения в объеме в 2-3 раза (5-15 минут)\n2. Добавить муку и взбить 0,5-1 минуту\n3. Смазать дно формы маслом и залить тесто\n4. Выпекать при 200°C 40 минут, затем 180°C ещё 15 минут",
+                notes: "Базовый, пышный, светлый. Универсальный для всех тортов"
+            },
+            {
+                name: "Бисквит на кефире",
+                ingredients: "300мл кефира, 300мл подсолнечного масла, 1 ч.л. соды, 3 яйца, 300г сахара, 350г муки, 2 ч.л. разрыхлителя, 1 ст.л. какао",
+                steps: "1. В кефир добавить соду, через 10 минут добавить масло\n2. Муку, соль, разрыхлитель и какао перемешать\n3. Взбить яйца с сахаром до увеличения объема в 2-3 раза\n4. Добавить поочередно сухие и жидкие смеси\n5. Выпекать при 180-200°C примерно 15 минут",
+                notes: "Мягкий, легко впитывает пропитку. Делится на 3 части для выпечки"
+            },
+            {
+                name: "Шоколадный бисквит",
+                ingredients: "113г коричневого сахара, 90г сливочного масла, 50г какао, 40г шоколада, 2 яйца, 1/2 пакетика ванильного сахара, 1/2 ч.л. разрыхлителя, 1/4 ч.л. соды",
+                steps: "1. Смешать просеянную муку, какао, соль, соду и разрыхлитель\n2. Растопить масло с шоколадом и остудить\n3. Взбить яйца с сахаром до воздушной массы\n4. Влить шоколадную массу и взбить\n5. Влить жидкую смесь в сухие ингредиенты\n6. Выпекать при 180-200°C примерно 15 минут",
+                notes: "Воздушный и хрупкий. Делится на 3 части. НЕ рекомендуется разрезать после выпечки!"
+            },
+            {
+                name: "Алладин (ореховый)",
+                ingredients: "100г масла, 400г сметаны 15-20%, 340г сахара, 2 ч.л. соды+лимонный сок, 500г муки, 100г орехов, 80г мака, 30г какао, 80г изюма",
+                steps: "1. Смешать растопленное масло, сахар и сметану, взбить 3-4 минуты\n2. Погасить соду лимонным соком и добавить в смесь\n3. Просеять муку и замесить тесто\n4. Разделить на 4 части: с маком, изюмом, орехами и какао\n5. Выпекать коржи примерно 20 минут при 200°C",
+                notes: "Многослойный с разными наполнителями. Выпекается 4 квадрата или круга"
+            }
+        ];
+
+        const propitki = [
+            {
+                name: "Универсальный сахарный сироп",
+                ingredients: "100мл воды, 100г сахара",
+                steps: "1. Вскипятить воду\n2. Добавить сахар, варить 2 минуты\n3. Остудить перед использованием",
+                notes: "Базовый, подходит ко всему. Самый простой вариант"
+            },
+            {
+                name: "Молочный сироп",
+                ingredients: "100мл воды, 100мл молока, 30г сахара",
+                steps: "1. Смешать воду и молоко\n2. Довести до кипения\n3. Добавить сахар, перемешать\n4. Остудить",
+                notes: "Мягче сахарного, сливочные нотки. Подходит для ванильных и классических тортов"
+            },
+            {
+                name: "Кофейный сироп",
+                ingredients: "150мл воды, 50мл молока, 2 ч.л. кофе (растворимого)",
+                steps: "1. Смешать воду и молоко\n2. Довести до кипения\n3. Добавить кофе, перемешать\n4. Остудить",
+                notes: "Для тирамису и шоколадных тортов. Интенсивный аромат кофе"
+            },
+            {
+                name: "Ягодный сироп",
+                ingredients: "150мл воды, 50мл сока (вишни, малины, клубники), 30г сахара",
+                steps: "1. Вскипятить воду с сахаром\n2. Добавить ягодный сок\n3. Перемешать и остудить",
+                notes: "Яркий цвет, свежий вкус. Идеален для ягодных тортов"
+            }
+        ];
+
+        const kremy = [
+            {
+                name: "Крем из взбитых сливок",
+                ingredients: "500мл сливок 33%+, 90-150г сахарной пудры",
+                steps: "1. Охладить сливки, миску и венчик\n2. Взбивать на средней скорости 4-5 минут до твёрдых пиков\n3. Добавить пудру в конце, последние 30 секунд\n4. Не перебивать!",
+                notes: "Лёгкий, воздушный. Можно добавить ягодное пюре, какао, лимон или кофе для вариаций"
+            },
+            {
+                name: "Крем-чиз на масле",
+                ingredients: "250г сливочного масла, 250г сливочного сыра (Philadelphia), 150г сахарной пудры",
+                steps: "1. Взбить масло 2 минуты до светлого оттенка\n2. Добавить сыр порциями, взбивая после каждой\n3. Добавить пудру, взбить 1-2 минуты",
+                notes: "Плотный, держится 5-7 дней. Идеален для выравнивания и печеньевых тортов"
+            },
+            {
+                name: "Крем-чиз на сливках",
+                ingredients: "200г сливочного сыра, 300мл сливок 33%+, 60-90г сахара",
+                steps: "1. Взбить сливки до мягких пиков (не до твёрдых!)\n2. Размять сыр с сахаром до однородности\n3. Аккуратно добавить сливки к сыру, перемешать лопаткой",
+                notes: "Лёгче масляного, держится 3-4 дня. Идеален для ягодных и фруктовых тортов"
+            },
+            {
+                name: "Крем масляный",
+                ingredients: "250г сливочного масла, 250мл молока/сливок 20%, 100г сахарной пудры, щепотка соли",
+                steps: "1. Взбить масло 3 минуты до бледно-жёлтого оттенка\n2. Добавить пудру порциями, взбивать 2 минуты\n3. Очень медленно добавлять молоко (30 сек на 50мл)",
+                notes: "Крем старой школы, густой, держит форму. Хранится 1 неделю"
+            },
+            {
+                name: "Крем шоколадный",
+                ingredients: "200г тёмного шоколада (60-70%), 150г сливочного масла, 100мл молока/сливок, 20г какао (опционально)",
+                steps: "1. Растопить масло + шоколад на водяной бане или микроволновке\n2. Охладить до 35-40°C\n3. Взбить с молоком 2-3 минуты до увеличения объёма",
+                notes: "Плотный и насыщенный. Температура критична! Хранится 5-7 дней"
+            }
+        ];
+
+        const compatibilityRules = [
+            { korj: "Классический бисквит", prop: "Универсальный сахарный", crem: ["Крем из сливок", "Крем-чиз на сливках"], reason: "Классическое сочетание" },
+            { korj: "Классический бисквит", prop: "Молочный", crem: ["Крем-чиз на масле"], reason: "Нежное молочное сочетание" },
+            { korj: "Классический бисквит", prop: "Ягодный", crem: ["Крем из сливок", "Крем-чиз на сливках"], reason: "Ягодный свежий тон" },
+            { korj: "Бисквит на кефире", prop: "Молочный", crem: ["Крем-чиз на масле", "Крем масляный"], reason: "Идеально для влажного коржа" },
+            { korj: "Бисквит на кефире", prop: "Ягодный", crem: ["Крем из сливок", "Крем-чиз на сливках"], reason: "Ягодный плюс влажность" },
+            { korj: "Шоколадный бисквит", prop: "Кофейный", crem: ["Крем шоколадный", "Крем масляный"], reason: "Классический шоко-кофе" },
+            { korj: "Шоколадный бисквит", prop: "Молочный", crem: ["Крем-чиз на масле"], reason: "Молочно-шоколадное" },
+            { korj: "Шоколадный бисквит", prop: "Универсальный сахарный", crem: ["Крем шоколадный"], reason: "Чистый шоколадный вкус" },
+            { korj: "Алладин", prop: "Молочный", crem: ["Крем-чиз на масле", "Крем масляный"], reason: "Ореховое молочное сочетание" },
+            { korj: "Алладин", prop: "Кофейный", crem: ["Крем масляный"], reason: "Ореховое с кофейным" }
+        ];
+
+        const gallery = [
+            { name: "Классический Бисквит", emoji: "🎂", combo: ["Классический бисквит", "Универсальный сахарный", "Крем из сливок"], price: "1500-2000₽" },
+            { name: "Шоколад-Кофе", emoji: "☕", combo: ["Шоколадный бисквит", "Кофейный", "Крем шоколадный"], price: "1800-2400₽" },
+            { name: "Ягодная Свежесть", emoji: "🫐", combo: ["Классический бисквит", "Ягодный", "Крем из сливок"], price: "1600-2200₽" },
+            { name: "Сливочный Чиз", emoji: "🧁", combo: ["Бисквит на кефире", "Молочный", "Крем-чиз на масле"], price: "1900-2500₽" },
+            { name: "Ореховый Деликатес", emoji: "🥜", combo: ["Алладин", "Молочный", "Крем масляный"], price: "2000-2800₽" },
+            { name: "Тирамису Элегант", emoji: "☕🎂", combo: ["Шоколадный бисквит", "Кофейный", "Крем масляный"], price: "2100-2900₽" },
+            { name: "Кефирный+Ягода", emoji: "🍓", combo: ["Бисквит на кефире", "Ягодный", "Крем-чиз на сливках"], price: "1700-2300₽" },
+            { name: "Премиум Чоколад", emoji: "🍫", combo: ["Шоколадный бисквит", "Молочный", "Крем шоколадный"], price: "2200-3000₽" },
+            { name: "Лёгкий и Воздушный", emoji: "☁️", combo: ["Классический бисквит", "Молочный", "Крем-чиз на сливках"], price: "1400-1900₽" },
+            { name: "Масляный Дворецкий", emoji: "👑", combo: ["Алладин", "Кофейный", "Крем масляный"], price: "2300-3200₽" },
+            { name: "Сахарный Сироп Классик", emoji: "✨", combo: ["Классический бисквит", "Универсальный сахарный", "Крем-чиз на масле"], price: "1600-2200₽" },
+            { name: "Кофейный Чиз-Лайт", emoji: "💫", combo: ["Бисквит на кефире", "Кофейный", "Крем-чиз на сливках"], price: "1800-2400₽" }
+        ];
+
+        function renderRecipes(data, containerId) {
+            const list = document.getElementById(containerId);
+            list.innerHTML = data.map((recipe, idx) => `
+                <div class="recipe-card">
+                    <h3>
+                        <div class="recipe-number">${idx + 1}</div>
+                        <span>${recipe.name}</span>
+                    </h3>
+                    <div class="recipe-field">
+                        <span class="recipe-label">Ингредиенты:</span>
+                        <span class="recipe-value">${recipe.ingredients}</span>
+                    </div>
+                    <div class="step-list">
+                        <ol>
+                            ${recipe.steps.split('\n').map(step => `<li>${step.replace(/^\d+\.\s/, '')}</li>`).join('')}
+                        </ol>
+                    </div>
+                    <div class="notes">💡 ${recipe.notes}</div>
+                </div>
+            `).join('');
+        }
+
+        function renderGallery() {
+            const container = document.getElementById('galleryContainer');
+            container.innerHTML = gallery.map((item, idx) => `
+                <div class="gallery-item" onclick="selectFromGallery(${idx})">
+                    <div class="gallery-image">${item.emoji}</div>
+                    <div class="gallery-info">
+                        <div class="gallery-name">${item.name}</div>
+                        <div class="gallery-price">${item.price}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function selectFromGallery(idx) {
+            const item = gallery[idx];
+            document.getElementById('korjSelect').value = item.combo[0];
+            document.getElementById('propSelect').value = item.combo[1];
+            document.getElementById('cremSelect').value = item.combo[2];
+            switchTab('selector');
+            updateSelector();
+        }
+
+        function getCompatibleCreams(korj, prop) {
+            const rule = compatibilityRules.find(r => r.korj === korj && r.prop === prop);
+            return rule ? rule.crem : null;
+        }
+
+        function checkCompatibility(korj, prop, crem) {
+            const rule = compatibilityRules.find(r => r.korj === korj && r.prop === prop);
+            if (!rule) return { compatible: false, reason: "Нет проверки совместимости" };
+            if (rule.crem.includes(crem)) {
+                return { compatible: true, reason: rule.reason };
+            }
+            return { compatible: false, reason: "Крем не оптимален с этой пропиткой" };
+        }
+
+        function calculateCost(korz, prop, crem) {
+            const priceEgg = parseFloat(document.getElementById('priceEgg').value) || 10;
+            const priceFlour = parseFloat(document.getElementById('priceFlour').value) || 60;
+            const priceSugar = parseFloat(document.getElementById('priceSugar').value) || 40;
+            const priceButter = parseFloat(document.getElementById('priceButter').value) || 500;
+            const priceCheese = parseFloat(document.getElementById('priceCheese').value) || 110;
+            const priceCream = parseFloat(document.getElementById('priceCream').value) || 180;
+            const priceCocoa = parseFloat(document.getElementById('priceCocoa').value) || 80;
+
+            let costKorz = 0, costProp = 0, costCrem = 0;
+
+            if (korz === "Классический бисквит") costKorz = 5 * priceEgg + 1 * priceFlour / 1000 * 250 + 1 * priceSugar / 1000 * 250;
+            else if (korz === "Бисквит на кефире") costKorz = 3 * priceEgg + 0.35 * priceFlour + 0.3 * priceSugar + 50;
+            else if (korz === "Шоколадный бисквит") costKorz = 2 * priceEgg + 0.05 * priceFlour + 0.113 * priceSugar + 90 * priceButter / 1000 + 50 * priceCocoa / 1000;
+            else if (korz === "Алладин") costKorz = 0.1 * priceButter + 400 * 8 / 1000 + 0.34 * priceSugar + 0.5 * priceFlour + 50;
+
+            if (prop === "Универсальный сахарный") costProp = 0.1 * priceSugar;
+            else if (prop === "Молочный") costProp = 0.03 * priceSugar + 30;
+            else if (prop === "Кофейный") costProp = 0.05 * priceSugar + 20;
+            else if (prop === "Ягодный") costProp = 0.03 * priceSugar + 40;
+
+            if (crem === "Крем из сливок") costCrem = priceCream;
+            else if (crem === "Крем-чиз на масле") costCrem = 250 * priceButter / 1000 + 110 + 0.15 * priceSugar;
+            else if (crem === "Крем-чиз на сливках") costCrem = priceCream * 0.6 + 55 + 0.06 * priceSugar;
+            else if (crem === "Крем масляный") costCrem = 250 * priceButter / 1000 + priceCream * 0.5 + 0.1 * priceSugar;
+            else if (crem === "Крем шоколадный") costCrem = 150 * priceButter / 1000 + 100 + priceCream * 0.2 + 20 * priceCocoa / 1000;
+
+            const totalCost = Math.round(costKorz + costProp + costCrem);
+            const retailPrice = Math.round(totalCost * 2.5);
+
+            return { totalCost, retailPrice };
+        }
+
+        function formatIngredientsHTML(ingredients) {
+            const { korz, prop, crem } = ingredients;
+            const korj = document.getElementById('korjSelect').value;
+            const { totalCost, retailPrice } = calculateCost(korj, document.getElementById('propSelect').value, document.getElementById('cremSelect').value);
+            
+            return `
+                <div style="margin-top: 16px; padding: 14px; background: #fff; border-radius: 8px; border: 2px solid #d4a574;">
+                    <div style="font-weight: 700; font-size: 14px; color: #d4a574; margin-bottom: 12px;">📋 Ингредиенты на весь торт:</div>
+                    
+                    <div style="margin-bottom: 12px;">
+                        <div style="font-weight: 600; color: #333; font-size: 13px; margin-bottom: 6px;">🎂 Коржи: ${korz.name}</div>
+                        <div style="background: #f9f9f9; padding: 10px; border-radius: 6px; font-size: 12px; color: #555; line-height: 1.6;">
+                            ${korz.ingredients}
+                        </div>
+                    </div>
+                    
+                    <div style="margin-bottom: 12px;">
+                        <div style="font-weight: 600; color: #333; font-size: 13px; margin-bottom: 6px;">💧 Пропитка: ${prop.name}</div>
+                        <div style="background: #f9f9f9; padding: 10px; border-radius: 6px; font-size: 12px; color: #555; line-height: 1.6;">
+                            ${prop.ingredients}
+                        </div>
+                    </div>
+                    
+                    <div style="margin-bottom: 12px;">
+                        <div style="font-weight: 600; color: #333; font-size: 13px; margin-bottom: 6px;">🧁 Крем: ${crem.name}</div>
+                        <div style="background: #f9f9f9; padding: 10px; border-radius: 6px; font-size: 12px; color: #555; line-height: 1.6;">
+                            ${crem.ingredients}
+                        </div>
+                    </div>
+
+                    <div class="cost-block">
+                        <div style="font-weight: 600; color: #ff9800; margin-bottom: 10px;">💰 Себестоимость:</div>
+                        <div class="cost-row">
+                            <span>Материалы:</span>
+                            <span><strong>${totalCost}₽</strong></span>
+                        </div>
+                        <div class="cost-row">
+                            <span>Маржа (150%):</span>
+                            <span>${totalCost * 1.5}₽</span>
+                        </div>
+                        <div class="cost-row total">
+                            <span>Рекомендуемая цена:</span>
+                            <span>${retailPrice}₽</span>
+                        </div>
+                    </div>
+
+                    <div class="button-group">
+                        <button class="btn btn-primary" onclick="copyRecipe('${korz.name}', '${prop.name}', '${crem.name}', ${totalCost}, ${retailPrice})">📋 Копировать</button>
+                        <button class="btn btn-primary" onclick="shareWhatsApp('${korz.name}', '${prop.name}', '${crem.name}', ${retailPrice})">📱 WhatsApp</button>
+                        <button class="btn btn-secondary" onclick="shareTelegram('${korz.name}', '${prop.name}', '${crem.name}')">✈️ Telegram</button>
+                        <button class="btn btn-secondary" onclick="downloadPDF('${korz.name}', '${prop.name}', '${crem.name}', ${totalCost}, ${retailPrice})">💾 PDF</button>
+                    </div>
+                    <div class="success-message" id="successMsg">✅ Скопировано в буфер обмена!</div>
+                </div>
+            `;
+        }
+
+        function copyRecipe(korz, prop, crem, cost, price) {
+            const text = `🎂 Конструктор Торта\n\nКорж: ${korz}\nПропитка: ${prop}\nКрем: ${crem}\n\n💰 Себестоимость: ${cost}₽\n💸 Рекомендуемая цена: ${price}₽\n\n#КонструкторТорта #Выпечка`;
+            navigator.clipboard.writeText(text).then(() => {
+                document.getElementById('successMsg').style.display = 'block';
+                setTimeout(() => { document.getElementById('successMsg').style.display = 'none'; }, 2000);
+            });
+        }
+
+        function shareWhatsApp(korz, prop, crem, price) {
+            const text = `Проверь этот торт! 🎂\n\nКорж: ${korz}\nПропитка: ${prop}\nКрем: ${crem}\n\nЦена: ${price}₽\n\nКонструктор торта: https://konstruktor-torta.ru`;
+            window.open(`https://wa.me/?text=${encodeURIComponent(text)}`);
+        }
+
+        function shareTelegram(korz, prop, crem) {
+            const text = `🎂 Отличная комбинация торта!\n\nКорж: ${korz}\nПропитка: ${prop}\nКрем: ${crem}\n\n#КонструкторТорта`;
+            window.open(`https://t.me/share/url?url=https://konstruktor-torta.ru&text=${encodeURIComponent(text)}`);
+        }
+
+        function downloadPDF(korz, prop, crem, cost, price) {
+            alert('PDF загрузка будет доступна в следующей версии! Пока используйте кнопку копирования.');
+        }
+
+        function getIngredientsForCombination(korzName, propName, cremName) {
+            const korz = korzhi.find(k => k.name === korzName);
+            const prop = propitki.find(p => p.name === propName);
+            const crem = kremy.find(c => c.name === cremName);
+            return { korz, prop, crem };
+        }
+
+        function updateSelector() {
+            const korj = document.getElementById('korjSelect').value;
+            const prop = document.getElementById('propSelect').value;
+            const crem = document.getElementById('cremSelect').value;
+            const result = document.getElementById('selectorResult');
+
+            if (!korj || !prop || !crem) {
+                result.innerHTML = '';
+                return;
+            }
+
+            const compatibility = checkCompatibility(korj, prop, crem);
+            const compatibleCreams = getCompatibleCreams(korj, prop);
+            
+            let html = `
+                <div class="result">
+                    <div class="result-title">✅ Твоя комбинация:</div>
+                    <div class="result-item"><strong>Корж:</strong> ${korj}</div>
+                    <div class="result-item"><strong>Пропитка:</strong> ${prop}</div>
+                    <div class="result-item"><strong>Крем:</strong> ${crem}</div>
+            `;
+
+            if (compatibility.compatible) {
+                html += `
+                    <div style="margin-top: 10px; padding: 8px; background: #e8f5e9; border-left: 3px solid #4caf50; border-radius: 4px;">
+                        <div style="color: #2e7d32; font-weight: 600; font-size: 12px;">👍 Отлично подобрано!</div>
+                        <div style="color: #558b2f; font-size: 11px; margin-top: 4px;">${compatibility.reason}</div>
+                    </div>
+                `;
+            } else {
+                html += `
+                    <div style="margin-top: 10px; padding: 8px; background: #fff3e0; border-left: 3px solid #ff9800; border-radius: 4px;">
+                        <div style="color: #e65100; font-weight: 600; font-size: 12px;">💡 Совет:</div>
+                        <div style="color: #bf360c; font-size: 11px; margin-top: 4px;">
+                            ${compatibility.reason}<br>
+                            ${compatibleCreams ? `<strong>Рекомендуем:</strong> ${compatibleCreams.join(', ')}` : ''}
+                        </div>
+                    </div>
+                `;
+            }
+
+            const ingredients = getIngredientsForCombination(korj, prop, crem);
+            html += formatIngredientsHTML(ingredients);
+            html += `</div>`;
+            result.innerHTML = html;
+        }
+
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        renderRecipes(korzhi, 'korhiList');
+        renderRecipes(propitki, 'propitkaList');
+        renderRecipes(kremy, 'kremyList');
+        renderGallery();
+    </script>
+</body>
+</html>
